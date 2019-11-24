@@ -1,15 +1,15 @@
 /**
- * # Player type implementation of the game stages
- * Copyright(c) 2019 Stefano <info@nodegame.org>
- * MIT Licensed
- *
- * Each client type must extend / implement the stages defined in `game.stages`.
- * Upon connection each client is assigned a client type and it is automatically
- * setup with it.
- *
- * http://www.nodegame.org
- * ---
- */
+* # Player type implementation of the game stages
+* Copyright(c) 2019 Stefano <info@nodegame.org>
+* MIT Licensed
+*
+* Each client type must extend / implement the stages defined in `game.stages`.
+* Upon connection each client is assigned a client type and it is automatically
+* setup with it.
+*
+* http://www.nodegame.org
+* ---
+*/
 
 "use strict";
 
@@ -24,13 +24,6 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         // Bid is valid if it is a number between 0 and 100.
         this.isValidBid = function(n) {
             return node.JSUS.isInt(n, -1, 101);
-        };
-
-        this.randomOffer = function(offer, submitOffer) {
-            var n;
-            n = J.randomInt(-1,100);
-            offer.value = n;
-            submitOffer.click();
         };
 
         // Setup page: header + frame.
@@ -75,7 +68,7 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                         decision = node.game.isValidBid(offer.value);
                         if ('number' !== typeof decision) {
                             W.writeln('Please enter a number between ' +
-                                      '0 and 100.', 'dictator');
+                            '0 and 100.', 'dictator');
                             return;
                         }
                         button.disabled = true;
@@ -86,8 +79,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     };
                 },
                 timeup: function() {
-                    node.game.randomOffer(W.getElementById('offer'),
-                                          W.getElementById('submitOffer'));
+                    var n;
+                    if ('undefined' === typeof node.game.decision) {
+                        n = J.randomInt(-1,100);
+                    }
+                    n = node.game.decision;
+                    W.getElementById('offer').value = n;
+                    W.getElementById('submitOffer').click();
                 }
             },
             OBSERVER: {
@@ -103,8 +101,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                         dotsObj.stop();
                         W.setInnerHTML('waitingFor', 'Decision arrived: ');
                         W.setInnerHTML('decision',
-                                       'The dictator offered: ' +
-                                       msg.data + ' ECU.');
+                        'The dictator offered: ' +
+                        msg.data + ' ECU.');
 
                         node.timer.randomDone();
                     });
