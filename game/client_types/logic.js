@@ -53,25 +53,26 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
         },
         cb: function() {
-            node.once.data('done', function(msg) {
-                return;
-                var offer, observer;
-                offer = msg.data.offer;
+            // This code is no longer relevant for Hands On 3.
+            // node.once.data('done', function(msg) {
+            //     return;
+            //     var offer, observer;
+            //     offer = msg.data.offer;
+            //
+            //     // Validate incoming offer.
+            //     if (false === J.isInt(offer, 0, 100)) {
+            //         console.log('Invalid offer received from ' + msg.from);
+            //         // If dictator is cheating re-set his/her offer.
+            //         msg.data.offer = settings.defaultOffer;
+            //         // Mark the item as manipulated.
+            //         msg.data.originalOffer = offer;
+            //     }
+            //
+            //     observer = node.game.matcher.getMatchFor(msg.from);
+            //     // Send the decision to the other player.
+            //     node.say('decision', observer, msg.data.offer);
+            // });
 
-                // Validate incoming offer.
-                if (false === J.isInt(offer, 0, 100)) {
-                    console.log('Invalid offer received from ' + msg.from);
-                    // If dictator is cheating re-set his/her offer.
-                    msg.data.offer = settings.defaultOffer;
-                    // Mark the item as manipulated.
-                    msg.data.originalOffer = offer;
-                }
-
-                observer = node.game.matcher.getMatchFor(msg.from);
-                // Send the decision to the other player.
-                node.say('decision', observer, msg.data.offer);
-
-            });
             console.log('Game round: ' + node.player.stage.round);
         }
     });

@@ -45,8 +45,12 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     else {
                         offer = node.game.offer;
                     }
+
                     node.say("decision", node.game.partner, offer);
 
+                    node.on.data("reply", function(msg) {
+                        node.timer.randomDone();
+                    });
                 }
             },
             OBSERVER: {

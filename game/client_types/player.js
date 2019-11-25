@@ -126,7 +126,9 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     var button, offer, div;
 
                     // Make the dictator display visible.
-                    div = W.getElementById('dictator').style.display = '';
+                    div = W.getElementById('dictator');
+                    div.style.display = '';
+
                     // W.gid is a shorthand for W.getElementById.
                     button = W.gid('submitOffer');
                     offer =  W.gid('offer');
@@ -146,15 +148,18 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
 
                         // Mark the end of the round, and
                         // store the decision in the server.
-                        node.say("decision", node.game.partner, offer);
+                        node.say("decision", node.game.partner, decision);
                     };
 
                     // Code for Hands On: 3 Observer's Reply.
                     // We wait for the reply, we display it, and
                     // we call node.done (with a random timer).
                     node.on.data("reply", function(msg) {
-                        W.writeln("Your partner thinks of your offer: " +
-                        (msg.data || "nothing"));
+                        var span = document.createElement('span');
+                        span.innerHTML =
+                             "Your partner thinks of your offer: " +
+                             (msg.data || "nothing");
+                        div.appendChild(span);
                         node.timer.randomDone();
                     });
 
@@ -181,14 +186,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                     dotsObj = W.addLoadingDots(span);
 
                     node.on.data('decision', function(msg) {
-
                         dotsObj.stop();
                         W.setInnerHTML('waitingFor', 'Decision arrived: ');
                         W.setInnerHTML('decision',
                         'The dictator offered: ' + msg.data + ' ECU.');
 
-                        node.timer.randomDone();
-                        return;
+                        // node.timer.randomDone();
+                        // return;
                         // Uncomment the two lines immediately above
                         // to run Hands On 3.
 
@@ -197,8 +201,8 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
                         // Add listener that sends the text back to dictator.
                         W.gid("submit_reply").onclick = function() {
                             // Say message directly to dictator.
-                            node.say("reply", "dictator_id",
-                            W.gid("observer_reply").value);
+                            node.say("reply", msg.from,
+                                     W.gid("observer_reply").value);
                             // End step.
                             node.done();
                         };
