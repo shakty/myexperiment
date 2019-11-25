@@ -14,11 +14,12 @@ module.exports = function(stager, settings) {
      stager
         .next('instructions')
         .next('quiz')
+        .next('grouping')
         .repeat('game', settings.REPEAT)
         .next('feedback')
         .next('end')
         .gameover();
 
     // Modify the stager to skip one stage.
-    // stager.skip('instructions');
+    stager.skip('grouping');
 };

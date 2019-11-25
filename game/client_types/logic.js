@@ -23,9 +23,23 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
         // Initialize the client.
     });
 
-    stager.extendStep('instructions', {
+    stager.extendStep('grouping', {
         cb: function() {
-            console.log('Instructions.');
+            // Let us assume a 4 player game, and we want 2 groups of two.
+
+            // Returns an array of ids.
+            var ids = node.game.playerList.id.getAllKeys();
+            // Make two random groups.
+            var groups = J.getNGroups(2);
+            // Loop through the groups and assign partners.
+            for (var i = 0; i < groups.length; i++) {
+                // Get array of group members.
+                var members = groups[i];
+                // Tell each group member about his or her partner.
+                node.say('yourpartner', members[0], members[1]);
+                node.say('yourpartner', members[1], members[0]);
+            }
+
         }
     });
 
@@ -34,12 +48,13 @@ module.exports = function(treatmentName, settings, stager, setup, gameRoom) {
             roles: [ 'DICTATOR', 'OBSERVER' ],
             match: 'round_robin',
             cycle: 'mirror_invert',
-            sayPartner: false
+            // sayPartner: false
             // skipBye: false,
 
         },
         cb: function() {
             node.once.data('done', function(msg) {
+                return;
                 var offer, observer;
                 offer = msg.data.offer;
 
